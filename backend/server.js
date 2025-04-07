@@ -23,6 +23,9 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Backend is on fire !! Not literally.. lol');
+});
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/analysis', require('./routes/analysis'));
