@@ -6,16 +6,25 @@ const cors = require('cors');
 dotenv.config();
 const app = express();
 
-// Middleware
-// Middleware - ADD THESE LINES
-// app.use(express.json()); // Parse JSON bodies
+// Parse JSON and URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Allowed origins array
+const allowedOrigins = ['https://kaya-eight.vercel.app', 'http://localhost:5173'];
 app.use(cors({
-  origin: 'https://kaya-eight.vercel.app', // your Vercel frontend URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // only if you're using cookies or sessions
+  credentials: true,
 }));
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(cors({ origin: 'http://localhost:5173' }));
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI)
@@ -30,5 +39,6 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/analysis', require('./routes/analysis'));
 
+// Start the server (only one app.listen call is needed)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
