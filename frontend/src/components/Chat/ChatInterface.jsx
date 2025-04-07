@@ -125,7 +125,7 @@ export default function ChatInterface() {
       }}
     >
       <Typography variant="h4" sx={{ color: '#b30000', mb: 2, textAlign: 'center' }}>
-        Beauty Chat
+        Kaya_AI
       </Typography>
       <Paper
         sx={{
