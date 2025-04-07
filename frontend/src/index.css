@@ -1,0 +1,5 @@
+/* src/index.css */
+body {
+  margin: 0; /* Remove default margins */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Optional: Match MUI fonts */
+}
