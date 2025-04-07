@@ -5,36 +5,44 @@ import {
   Button, 
   List, 
   ListItem, 
-  ListItemText, 
   Paper,
   Avatar,
   Box,
   Typography
 } from '@mui/material';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+
+// Component to render Markdown text
+function AnalysisOutput({ markdownText }) {
+  return (
+    <div style={{ maxWidth: '70%', wordBreak: 'break-word' }}>
+      <ReactMarkdown>{markdownText}</ReactMarkdown>
+    </div>
+  );
+}
 
 export default function ChatInterface() {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
-  // Optionally, if you need to store image URLs locally (e.g., if not using the user document), you can add state for that.
-  // const [images, setImages] = useState([]);
 
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim()) return; // Prevent sending empty messages
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token'); // Retrieve token for authorization
       const response = await axios.post(
         'http://localhost:5000/api/analysis/analyze',
-        { question: message },  // only send the question
+        { question: message },  
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Update chat history with user message and AI response
       setChatHistory((prev) => [
         ...prev,
-        { type: 'user', content: message },
-        { type: 'ai', content: response.data.tips }
+        { type: 'user', content: message }, // User's input
+        { type: 'ai', content: response.data.tips } // AI's Markdown-formatted response
       ]);
-      setMessage('');
+      setMessage(''); // Clear input field after sending
     } catch (error) {
       console.error('Error:', error);
       alert(error.response?.data?.error || 'Analysis failed');
@@ -60,10 +68,15 @@ export default function ChatInterface() {
               }}>
                 {msg.type === 'user' ? 'U' : 'AI'}
               </Avatar>
-              <ListItemText 
-                primary={msg.content} 
-                sx={{ maxWidth: '70%', wordBreak: 'break-word' }} 
-              />
+              {msg.type === 'user' ? (
+                // Render user message as plain text
+                <div style={{ maxWidth: '70%', wordBreak: 'break-word' }}>
+                  {msg.content}
+                </div>
+              ) : (
+                // Render AI response using Markdown
+                <AnalysisOutput markdownText={msg.content} />
+              )}
             </ListItem>
           ))}
         </List>
@@ -75,7 +88,7 @@ export default function ChatInterface() {
           label="Ask about your skin..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          onKeyPress={(e) => e.key === 'Enter' && handleSend()} // Send on Enter key press
         />
         <Button 
           variant="contained" 
