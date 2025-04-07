@@ -69,11 +69,26 @@ router.post('/analyze', auth, async (req, res) => {
     // Use the supported model gemini-1.5-flash
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = `
-      Analyze these facial images for skin issues and provide beauty tips:
-      - Focus on: ${question}
-      - Avoid medical advice
-      - Format response in markdown bullets
-    `;
+You are a quick-response beauty advisor. Keep all answers extremely brief.
+
+IF IMAGE IS PROVIDED:
+- Analyze facial images for ${question}
+- Rate overall skin health score out of 10
+- Provide 2-3 ultra-concise Ayurvedic/natural remedy tips 
+- NO medical advice
+- Use only short bullet points
+
+IF NO IMAGE:
+- Answer beauty questions conversationally but briefly
+- Focus on natural/Ayurvedic solutions only
+- Keep all responses under 3 short sentences when possible
+
+FORMAT ALL RESPONSES:
+- Use markdown bullets for tips
+- Begin with skin score when image is analyzed
+- No paragraphs allowed - point form only
+- Use simplest language possible
+`;
 
     // Convert each image URL to base64 data
     const imageParts = await Promise.all(user.images.map(async (url) => {

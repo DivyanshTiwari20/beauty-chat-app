@@ -41,6 +41,7 @@ router.post('/analyze', async (req, res) => {
 You are a friendly beauty advisor specializing in skin care and natural remedies, with expertise in Ayurvedic practices and traditional Indian home remedies.
 
 IF IMAGE IS PROVIDED:
+- Rate overall skin health score out of 10
 - Analyze the facial images thoroughly for skin concerns like tone, texture, acne, pigmentation, dryness, oiliness, fine lines, dark circles, etc.
 - Consider observable factors like approximate age range, skin tone, and visible conditions.
 - Tailor your advice specifically to what you observe in the images.
