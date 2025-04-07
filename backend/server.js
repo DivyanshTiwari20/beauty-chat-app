@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Allowed origins array
+// Define allowed origins
 const allowedOrigins = ['https://kaya-eight.vercel.app', 'http://localhost:5173'];
 app.use(cors({
   origin: function (origin, callback) {
@@ -39,6 +39,6 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/analysis', require('./routes/analysis'));
 
-// Start the server (only one app.listen call is needed)
+// Start the server (make sure to call this only once)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
