@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -23,7 +23,7 @@ export default function Login() {
       alert(err.response?.data?.error || 'Login failed');
     }
   };
-  
+
   return (
     <Box
       sx={{
@@ -69,10 +69,10 @@ export default function Login() {
           </Button>
         </form>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          Don't have an account?{' '}
-          <a href="/signup" style={{ color: '#b30000', textDecoration: 'none' }}>
+          Already have an account?{' '}
+          <Link to="/signup" style={{ color: '#b30000', textDecoration: 'none' }}>
             Sign up
-          </a>
+          </Link>
         </Typography>
       </Paper>
     </Box>
