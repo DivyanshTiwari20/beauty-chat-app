@@ -28,7 +28,6 @@ function AnalysisOutput({ markdownText }) {
 export default function ChatInterface() {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState(() => {
-    // Load chat history from localStorage if available
     const saved = localStorage.getItem('chatHistory');
     return saved ? JSON.parse(saved) : [];
   });
@@ -36,7 +35,7 @@ export default function ChatInterface() {
   const fileInputRef = useRef(null);
   const chatListRef = useRef(null);
 
-  // Persist chat history to localStorage and auto-scroll to bottom on change
+  // Persist chat history and auto-scroll to bottom
   useEffect(() => {
     localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     if (chatListRef.current) {
@@ -44,7 +43,7 @@ export default function ChatInterface() {
     }
   }, [chatHistory]);
 
-  // Handle image upload (requires exactly 3 images)
+  // Handle image upload (exactly 3 images)
   const handleImageUpload = async (files) => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -104,7 +103,7 @@ export default function ChatInterface() {
     }
   };
 
-  // When user selects files from the upload icon
+  // Handle file input change from upload icon
   const handleFileChange = (e) => {
     const files = e.target.files;
     handleImageUpload(files);
@@ -115,7 +114,7 @@ export default function ChatInterface() {
       sx={{
         width: '100vw',
         minHeight: '100vh',
-        bgcolor: '#ffe6e6', // light pink background
+        bgcolor: '#ffe6e6', // Light pink background
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -128,14 +127,15 @@ export default function ChatInterface() {
       </Typography>
       <Paper
         sx={{
-          width: { xs: '95%', sm: '90%', md: '600px' },
-          flexGrow: 1,
-          bgcolor: '#fff0f0', // off-white pink
+          // Adjust the width here to make the chat area wider (e.g., md: '800px' for wider screens)
+          width: { xs: '95%', sm: '90%', md: '800px' },
+          // Use a maxHeight relative to viewport height to avoid outer scrolling
+          maxHeight: 'calc(100vh - 200px)',
+          bgcolor: '#fff0f0', // Off-white pink
           borderRadius: 3,
           p: 2,
           mb: 2,
-          overflowY: 'auto',
-          maxHeight: '60vh',
+          overflowY: 'auto', // Scrolling only on the chat messages
         }}
         ref={chatListRef}
       >
@@ -181,7 +181,7 @@ export default function ChatInterface() {
       </Paper>
       <Box
         sx={{
-          width: { xs: '95%', sm: '90%', md: '600px' },
+          width: { xs: '95%', sm: '90%', md: '800px' },
           display: 'flex',
           gap: 1,
           alignItems: 'center',
@@ -204,7 +204,10 @@ export default function ChatInterface() {
               </InputAdornment>
             ),
           }}
-          sx={{ bgcolor: '#ffffff', borderRadius: 1 }}
+          sx={{
+            bgcolor: '#ffffff',
+            borderRadius: 1,
+          }}
         />
         <Button variant="contained" onClick={handleSend} sx={{ height: '56px', bgcolor: '#b30000' }}>
           Send
