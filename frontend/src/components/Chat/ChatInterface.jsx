@@ -15,6 +15,8 @@ import {
 import { PhotoCamera } from '@mui/icons-material';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import.meta.env.VITE_API_URL
+
 
 // Component to render Markdown text
 function AnalysisOutput({ markdownText }) {
@@ -60,7 +62,7 @@ export default function ChatInterface() {
       formData.append('images', file);
     });
     try {
-      await axios.post('http://localhost:5000/api/analysis/upload', formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/analysis/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -85,7 +87,7 @@ export default function ChatInterface() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/analysis/analyze',
+        `${import.meta.env.VITE_API_URL}/api/analysis/analyze`,
         { question: message },
         { headers: { Authorization: `Bearer ${token}` } }
       );
