@@ -8,7 +8,12 @@ const app = express();
 
 // Middleware
 // Middleware - ADD THESE LINES
-app.use(express.json()); // Parse JSON bodies
+// app.use(express.json()); // Parse JSON bodies
+app.use(cors({
+  origin: 'https://kaya-eight.vercel.app', // your Vercel frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // only if you're using cookies or sessions
+}));
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors({ origin: 'http://localhost:5173' }));
 
