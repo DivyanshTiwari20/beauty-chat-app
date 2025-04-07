@@ -38,10 +38,11 @@ router.post('/analyze', async (req, res) => {
     const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
 
     const prompt = `
-      Analyze these 3 facial images for skin issues like acne, dullness, or dryness.
-      Provide beauty tips in bullet points. Avoid medical advice.
-      User question: ${question}
-    `;
+    Analyze these three facial images for common skin issues such as acne, dullness, or dryness, considering both modern and Ayurvedic perspectives.
+    Provide concise, detailed, and friendly beauty tips in bullet points, focusing on natural remedies. Keep the advice short and to the point, and avoid any medical recommendations.
+    User question: ${question}
+  `;
+  
 
     const imageParts = imageUrls.map(url => ({
       inlineData: { data: url, mimeType: 'image/jpeg' }
