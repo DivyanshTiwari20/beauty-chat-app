@@ -120,27 +120,30 @@ export default function ChatInterface() {
     >
       {/* Header */}
       <Box
-        sx={{
-          p: 2,
-          borderBottom: '1px solid #f2f2f2',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          bgcolor: '#ffffff',
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ 
-            color: '#e91e63', 
-            fontWeight: 600,
-            fontSize: '1.1rem',
-            textAlign: 'center' 
-          }}
-        >
-          Kaya_AI
-        </Typography>
-      </Box>
+  sx={{
+    p: 2,
+    borderBottom: '1px solid #f2f2f2',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bgcolor: '#ffffff',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+  }}
+>
+  <Typography
+    variant="h6"
+    sx={{ 
+      color: '#e91e63', 
+      fontWeight: 600,
+      fontSize: '1.1rem',
+      textAlign: 'center' 
+    }}
+  >
+    Kaya_AI
+  </Typography>
+</Box>
 
       {/* Chat area */}
       <Box
@@ -173,14 +176,16 @@ export default function ChatInterface() {
             }}
           >
             <Box
-              sx={{ 
-                width: 80, 
-                height: 80, 
-                borderRadius: '50%',
-                background: 'linear-gradient(45deg, #ffb6c1, #e91e63)',
+              sx={{
+                p: 2,
+                borderTop: '1px solid #f2f2f2',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                gap: 1,
+                bgcolor: '#ffffff',
+                position: 'sticky',
+                bottom: 0,
+                zIndex: 10,
               }}
             >
               <Typography variant="h5" sx={{ color: 'white' }}>KA</Typography>
