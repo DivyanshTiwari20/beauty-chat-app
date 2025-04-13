@@ -149,18 +149,19 @@ export default function ChatInterface() {
       <Box
         ref={chatListRef}
         sx={{
-          flexGrow: 1,
+          fflexGrow: 1,
           p: 2,
+          pb: '70px', // Add padding at bottom to account for fixed input area
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
           bgcolor: '#ffffff',
           '&::-webkit-scrollbar': {
-      display: 'none'
-    },
-    scrollbarWidth: 'none',  /* Firefox */
-    msOverflowStyle: 'none'  /* Internet Explorer/Edge */
+            display: 'none'
+          },
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
         }}
       >
         {chatHistory.length === 0 && (
@@ -251,6 +252,15 @@ export default function ChatInterface() {
           alignItems: 'center',
           gap: 1,
           bgcolor: '#ffffff',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          maxWidth: '700px',
+          margin: '0 auto',
+          zIndex: 10,
+          boxSizing: 'border-box'
         }}
       >
         <TextField
