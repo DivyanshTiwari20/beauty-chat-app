@@ -206,33 +206,35 @@ export default function ChatInterface() {
               width: '100%',
             }}
           >
-            <Box
-              sx={{
-                maxWidth: '75%',
-                p: 2,
-                borderRadius: 2,
-                bgcolor: 
-                  msg.type === 'user'
-                    ? '#ffe6ea'
-                    : msg.type === 'ai'
-                    ? '#f8f9fa'
-                    : '#fff8e1',
-                boxShadow: msg.type !== 'system' ? '0 1px 2px rgba(0, 0, 0, 0.05)' : 'none',
-                border: msg.type === 'ai' ? '1px solid #eaeaea' : 'none',
-              }}
-            >
-              {msg.type === 'user' ? (
-                <Typography variant="body1" sx={{ color: '#333' }}>
-                  {msg.content}
-                </Typography>
-              ) : msg.type === 'ai' ? (
-                <AnalysisOutput markdownText={msg.content} />
-              ) : (
-                <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#666' }}>
-                  {msg.content}
-                </Typography>
-              )}
-            </Box>
+<Box
+  sx={{
+    maxWidth: { xs: '90%', sm: '75%' },
+    p: { xs: 1, sm: 2 },
+    m: { xs: 0.5, sm: 1 },
+    borderRadius: 2,
+    bgcolor:
+      msg.type === 'user'
+        ? '#ffe6ea'   // User bubble color
+        : msg.type === 'ai'
+        ? '#f8f9fa'   // AI bubble color
+        : '#fff8e1',  // System or other messages color
+    boxShadow: msg.type !== 'system' ? '0 1px 2px rgba(0, 0, 0, 0.05)' : 'none',
+    border: msg.type === 'ai' ? '1px solid #eaeaea' : 'none',
+  }}
+>
+  {msg.type === 'user' ? (
+    <Typography variant="body1" sx={{ color: '#333' }}>
+      {msg.content}
+    </Typography>
+  ) : msg.type === 'ai' ? (
+    <AnalysisOutput markdownText={msg.content} />
+  ) : (
+    <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#666' }}>
+      {msg.content}
+    </Typography>
+  )}
+</Box>
+
           </Box>
         ))}
         

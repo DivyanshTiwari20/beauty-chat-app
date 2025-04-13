@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,9 +8,11 @@ export default function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
         username,
@@ -21,6 +23,8 @@ export default function Signup() {
     } catch (err) {
       console.error('Signup Error:', err);
       alert(err.response?.data?.error || 'Signup failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,8 +75,14 @@ export default function Signup() {
             onChange={(e) => setPassword(e.target.value)}
             sx={{ mb: 2 }}
           />
-          <Button type="submit" variant="contained" fullWidth sx={{ bgcolor: '#b30000', mb: 2 }}>
-            Signup
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{ bgcolor: '#b30000', mb: 2 }}
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Signup'}
           </Button>
         </form>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
