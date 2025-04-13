@@ -3,25 +3,18 @@ import {
   Box,
   TextField,
   Button,
-  List,
-  ListItem,
-  Paper,
-  Avatar,
   Typography,
-  IconButton,
-  InputAdornment,
   CircularProgress,
+  IconButton,
 } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
+import { PhotoCamera, Send } from '@mui/icons-material';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import.meta.env.VITE_API_URL
-
 
 // Component to render Markdown text
 function AnalysisOutput({ markdownText }) {
   return (
-    <div style={{ maxWidth: '70%', wordBreak: 'break-word' }}>
+    <div style={{ width: '100%', wordBreak: 'break-word' }}>
       <ReactMarkdown>{markdownText}</ReactMarkdown>
     </div>
   );
@@ -114,106 +107,208 @@ export default function ChatInterface() {
   return (
     <Box
       sx={{
-        width: '100vw',
-        minHeight: '100vh',
-        bgcolor: '#ffe6e6', // Light pink background
+        width: '100%',
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        py: 2,
-        px: 1,
+        bgcolor: '#fff5f5',
+        maxWidth: '800px',
+        margin: '0 auto',
+        // borderLeft: { xs: 'none', md: '1px solid #f0f0f0' },
+        // borderRight: { xs: 'none', md: '1px solid #f0f0f0' },
       }}
     >
-      <Typography variant="h4" sx={{ color: '#b30000', mb: 2, textAlign: 'center' }}>
-        Kaya_AI
-      </Typography>
-      <Paper
+      {/* Header */}
+      <Box
         sx={{
-          // Adjust the width here to make the chat area wider (e.g., md: '800px' for wider screens)
-          width: { xs: '95%', sm: '90%', md: '800px' },
-          // Use a maxHeight relative to viewport height to avoid outer scrolling
-          maxHeight: 'calc(100vh - 200px)',
-          bgcolor: '#fff0f0', // Off-white pink
-          borderRadius: 3,
           p: 2,
-          mb: 2,
-          overflowY: 'auto', // Scrolling only on the chat messages
+          borderBottom: '1px solid #f2f2f2',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: '#ffffff',
         }}
-        ref={chatListRef}
       >
-        <List>
-          {chatHistory.map((msg, index) => (
-            <ListItem
-              key={index}
-              sx={{
-                justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start',
-                mb: 1,
-                borderRadius: 2,
-                backgroundColor:
-                  msg.type === 'user'
-                    ? '#fde0dc'
-                    : msg.type === 'ai'
-                    ? '#ffebee'
-                    : '#fff3e0',
-                p: 1,
+        <Typography
+          variant="h6"
+          sx={{ 
+            color: '#e91e63', 
+            fontWeight: 600,
+            fontSize: '1.1rem',
+            textAlign: 'center' 
+          }}
+        >
+          Kaya_AI
+        </Typography>
+      </Box>
+
+      {/* Chat area */}
+      <Box
+        ref={chatListRef}
+        sx={{
+          flexGrow: 1,
+          p: 2,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          bgcolor: '#ffffff',
+          '&::-webkit-scrollbar': {
+      display: 'none'
+    },
+    scrollbarWidth: 'none',  /* Firefox */
+    msOverflowStyle: 'none'  /* Internet Explorer/Edge */
+        }}
+      >
+        {chatHistory.length === 0 && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              gap: 2,
+              opacity: 0.7,
+            }}
+          >
+            <Box
+              sx={{ 
+                width: 80, 
+                height: 80, 
+                borderRadius: '50%',
+                background: 'linear-gradient(45deg, #ffb6c1, #e91e63)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              {msg.type !== 'system' && (
-                <Avatar sx={{ bgcolor: msg.type === 'user' ? '#b71c1c' : '#757575', mr: 1 }}>
-                  {msg.type === 'user' ? 'U' : 'AI'}
-                </Avatar>
-              )}
+              <Typography variant="h5" sx={{ color: 'white' }}>KA</Typography>
+            </Box>
+            <Typography variant="body1" sx={{ color: '#666' }}>
+              How can I assist with your skin today?
+            </Typography>
+          </Box>
+        )}
+
+        {chatHistory.map((msg, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start',
+              width: '100%',
+            }}
+          >
+            <Box
+              sx={{
+                maxWidth: '75%',
+                p: 2,
+                borderRadius: 2,
+                bgcolor: 
+                  msg.type === 'user'
+                    ? '#ffe6ea'
+                    : msg.type === 'ai'
+                    ? '#f8f9fa'
+                    : '#fff8e1',
+                boxShadow: msg.type !== 'system' ? '0 1px 2px rgba(0, 0, 0, 0.05)' : 'none',
+                border: msg.type === 'ai' ? '1px solid #eaeaea' : 'none',
+              }}
+            >
               {msg.type === 'user' ? (
-                <Box sx={{ maxWidth: '70%', wordBreak: 'break-word' }}>{msg.content}</Box>
+                <Typography variant="body1" sx={{ color: '#333' }}>
+                  {msg.content}
+                </Typography>
               ) : msg.type === 'ai' ? (
                 <AnalysisOutput markdownText={msg.content} />
               ) : (
-                <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#555' }}>
+                <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#666' }}>
                   {msg.content}
                 </Typography>
               )}
-            </ListItem>
-          ))}
-          {loading && (
-            <ListItem sx={{ justifyContent: 'center' }}>
-              <CircularProgress color="secondary" />
-            </ListItem>
-          )}
-        </List>
-      </Paper>
+            </Box>
+          </Box>
+        ))}
+        
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+            <CircularProgress size={24} sx={{ color: '#e91e63' }} />
+          </Box>
+        )}
+      </Box>
+
+      {/* Input area */}
       <Box
         sx={{
-          width: { xs: '95%', sm: '90%', md: '800px' },
+          p: 2,
+          borderTop: '1px solid #f2f2f2',
           display: 'flex',
-          gap: 1,
           alignItems: 'center',
-          mb: 2,
+          gap: 1,
+          bgcolor: '#ffffff',
         }}
       >
         <TextField
           fullWidth
-          label="Ask about your skin..."
+          placeholder="Ask about your skin..."
+          variant="outlined"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton component="label">
-                  <PhotoCamera />
-                  <input hidden accept="image/*" type="file" multiple onChange={handleFileChange} />
-                </IconButton>
-              </InputAdornment>
+              <IconButton component="label" sx={{ color: '#e91e63' }}>
+                <PhotoCamera />
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                />
+              </IconButton>
             ),
+            sx: {
+              borderRadius: '24px',
+              bgcolor: '#f8f9fa',
+              '&.MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#e0e0e0',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#e91e63',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#e91e63',
+                },
+              },
+            },
           }}
           sx={{
-            bgcolor: '#ffffff',
-            borderRadius: 1,
+            '& .MuiFormLabel-root.Mui-focused': {
+              color: '#e91e63',
+            },
           }}
         />
-        <Button variant="contained" onClick={handleSend} sx={{ height: '56px', bgcolor: '#b30000' }}>
-          Send
-        </Button>
+        <IconButton 
+          onClick={handleSend} 
+          disabled={!message.trim() || loading}
+          sx={{ 
+            bgcolor: '#e91e63',
+            color: 'white',
+            width: 44,
+            height: 44,
+            '&:hover': {
+              bgcolor: '#d81b60',
+            },
+            '&.Mui-disabled': {
+              bgcolor: '#fce4ec',
+              color: '#f8bbd0',
+            }
+          }}
+        >
+          <Send />
+        </IconButton>
       </Box>
     </Box>
   );

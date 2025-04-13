@@ -26,16 +26,22 @@ export default function Login() {
 
   return (
     <Box
-      sx={{
-        width: '100vw',
-        minHeight: '100vh',
-        bgcolor: '#ffe6e6', // light pink background
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        p: 2,
-      }}
-    >
+  sx={{
+    backgroundImage: 'url(/bg.jpg)', // Ensure this image is in your public folder
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    
+    width: '98vw',
+    minHeight: '93vh',
+    bgcolor: 'rgba(255, 230, 230, 0.7)', // Light pink with transparency
+    backdropFilter: 'blur(8px)', // Apply blur effect
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    p: 2,
+  }}
+>
+
       <Paper
         sx={{
           width: { xs: '95%', sm: '400px' },
