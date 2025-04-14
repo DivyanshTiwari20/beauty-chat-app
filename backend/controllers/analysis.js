@@ -17,6 +17,9 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // Multer for image upload
 const upload = multer({ storage: multer.memoryStorage() });
 
+// In-memory storage for analysis results
+const analyses = new Map();
+
 // Upload 3 images
 router.post('/upload', upload.array('images', 3), async (req, res) => {
   try {
@@ -34,45 +37,30 @@ router.post('/upload', upload.array('images', 3), async (req, res) => {
 // Analyze images with Gemini
 router.post('/analyze', async (req, res) => {
   try {
-    const { imageUrls, question } = req.body;
+    const { imageUrls, question, conversationId } = req.body;  // Add conversationId
+    if (!conversationId) {
+      return res.status(400).json({ error: 'conversationId is required' });
+    }
+
     const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
 
     const prompt = `
-You are a friendly beauty advisor specializing in skin care and natural remedies, with expertise in Ayurvedic practices and traditional Indian home remedies.
+You are a knowledgeable Ayurvedic beauty advisor specializing in natural skin care using ayurveda and ayurveda medicine. Provide personalized, natural skin care tips based solely on Ayurvedic principles.
 
-IF IMAGE IS PROVIDED:
-- Rate overall skin health score out of 10
-- Analyze the facial images thoroughly for skin concerns like tone, texture, acne, pigmentation, dryness, oiliness, fine lines, dark circles, etc.
-- Consider observable factors like approximate age range, skin tone, and visible conditions.
-- Tailor your advice specifically to what you observe in the images.
+IF AN IMAGE IS PROVIDED:
+- Score overall skin health (0-10).
+- Analyze for tone, texture, acne, pigmentation, dryness, oiliness, fine lines, dark circles, etc.
+- Briefly summarize visible skin characteristics respectfully.
+- Ask for clarifications if necessary (e.g., changes, irritation, seasonal shifts).
 
 FOR ALL INTERACTIONS:
-- Engage in casual, friendly conversation if the user wants to chat.
-- Provide only beauty and health-related advice when asked for tips.
-- Offer personalized recommendations based on:
-  * Visible skin conditions (if image provided)
-  * User's specific questions or concerns
-  * Seasonal factors if mentioned
-  * Geographic/climate considerations if shared
-
-GUIDELINES FOR RECOMMENDATIONS:
-- Focus exclusively on Ayurvedic and natural solutions (no modern medications)
-- Prioritize traditional Indian home remedies using common kitchen ingredients
-- Structure advice in brief, easy-to-follow bullet points
-- Include approximate timeframes for seeing results
-- Suggest holistic approaches (diet, hydration, sleep) when appropriate
-- If suggesting herbs or specialized ingredients, mention common alternatives
-- Avoid medical diagnoses or claims to treat medical conditions
-
-RESPONSE FORMAT:
-- Begin with a brief, friendly greeting and acknowledgment of their question
-- If images were analyzed, include a short, non-judgmental description of observed skin characteristics
-- Provide 3-5 specific, actionable tips relevant to their situation
-- End with encouragement and an invitation for follow-up questions
+- Ask for key details: main concerns, daily routine, allergies/sensitivities, lifestyle, seasonal or climate factors.
+- Provide 3-5 clear, bullet-pointed Ayurvedic tips with approximate timeframes and holistic suggestions (diet, hydration, sleep).
+- Include natural alternatives if specific herbs are mentioned.
+- Avoid medical diagnoses or claims of curing conditions.
 
 User question: ${question}
 `;
-  
 
     const imageParts = imageUrls.map(url => ({
       inlineData: { data: url, mimeType: 'image/jpeg' }
@@ -80,7 +68,46 @@ User question: ${question}
 
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
-    res.status(200).json({ success: true, tips: response.text() });
+    const analysisText = response.text();
+
+    // Store the analysis in the Map using conversationId
+    analyses.set(conversationId, analysisText);
+
+    res.status(200).json({ success: true, tips: analysisText });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Handle follow-up questions
+router.post('/ask', async (req, res) => {
+  try {
+    const { conversationId, question } = req.body;
+    if (!conversationId) {
+      return res.status(400).json({ error: 'conversationId is required' });
+    }
+
+    const previousAnalysis = analyses.get(conversationId);
+    if (!previousAnalysis) {
+      return res.status(404).json({ error: 'Conversation not found. Please start a new conversation by uploading images.' });
+    }
+
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+
+    const prompt = `
+You are a knowledgeable Ayurvedic beauty advisor specializing in natural skin care using ayurveda and ayurveda medicine. Provide personalized, natural skin care tips based solely on Ayurvedic principles.
+
+Based on the previous analysis:
+${previousAnalysis}
+
+The user is now asking: ${question}
+
+Please provide a response that takes into account the previous analysis and the user's new question. Avoid repeating the greeting or asking for images unless necessary.
+`;
+
+    const result = await model.generateContent([prompt]);
+    const response = await result.response;
+    res.status(200).json({ success: true, answer: response.text() });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
