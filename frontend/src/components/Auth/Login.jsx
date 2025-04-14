@@ -30,17 +30,17 @@ export default function Login() {
   return (
     <Box
       sx={{
-        backgroundImage: 'url(/bg.jpg)', // Ensure this image is in your public folder
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        width: '98vw',
-        minHeight: '93vh',
-        bgcolor: 'rgba(255, 230, 230, 0.7)', // Light pink with transparency
-        backdropFilter: 'blur(8px)', // Apply blur effect
+        width: '100vw',
+        minHeight: '100vh',
+        bgcolor: '#ffe6e6',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         p: 2,
+        backgroundImage: 'url(/image.jpg)', // Image from the public folder
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <Paper
@@ -51,7 +51,7 @@ export default function Login() {
           boxShadow: 3,
         }}
       >
-        <Typography variant="h4" sx={{ color: '#b30000', textAlign: 'center', mb: 2 }}>
+        <Typography variant="h4" sx={{ color: '#FF69B4', textAlign: 'center', mb: 2 }}>
           Login
         </Typography>
         <form onSubmit={handleLogin}>
@@ -75,15 +75,15 @@ export default function Login() {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ bgcolor: '#b30000', mb: 2 }}
+            sx={{ bgcolor: '#FF69B4', mb: 2 }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} sx={{ color: '#b30000' }} /> : 'Login'}
+            {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Login'}
           </Button>
         </form>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          Already have an account?{' '}
-          <Link to="/signup" style={{ color: '#b30000', textDecoration: 'none' }}>
+          Don't have an account?{' '}
+          <Link to="/signup" style={{ color: '#FF69B4', textDecoration: 'none' }}>
             Sign up
           </Link>
         </Typography>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , Link} from 'react-router-dom';
 import axios from 'axios';
 
 export default function Signup() {
@@ -38,6 +38,10 @@ export default function Signup() {
         justifyContent: 'center',
         alignItems: 'center',
         p: 2,
+        backgroundImage: 'url(/image.jpg)', // Image from the public folder
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <Paper
@@ -48,7 +52,7 @@ export default function Signup() {
           boxShadow: 3,
         }}
       >
-        <Typography variant="h4" sx={{ color: '#b30000', textAlign: 'center', mb: 2 }}>
+        <Typography variant="h4" sx={{ color: '#FF69B4', textAlign: 'center', mb: 2 }}>
           Signup
         </Typography>
         <form onSubmit={handleSignup}>
@@ -79,7 +83,7 @@ export default function Signup() {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ bgcolor: '#b30000', mb: 2 }}
+            sx={{ bgcolor: '#FF69B4', mb: 2 }}
             disabled={loading}
           >
             {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Signup'}
@@ -87,9 +91,9 @@ export default function Signup() {
         </form>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
           Already have an account?{' '}
-          <a href="/login" style={{ color: '#b30000', textDecoration: 'none' }}>
+          <Link to="/login" style={{ color: '#FF69B4', textDecoration: 'none' }}>
             Login
-          </a>
+          </Link>
         </Typography>
       </Paper>
     </Box>
