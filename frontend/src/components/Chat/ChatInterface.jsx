@@ -32,13 +32,31 @@ export default function BeautySkinAI({ userProfile }) {
   const [loading, setLoading] = useState(false);
   const chatListRef = useRef(null);
 
-  // Persist chat history and auto-scroll to bottom
+  // Persist chat history and auto-scroll to bottom with a small delay to ensure content is rendered
   useEffect(() => {
     localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     if (chatListRef.current) {
-      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+      setTimeout(() => {
+        chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+      }, 100);
     }
   }, [chatHistory]);
+
+  // Handle resize events (including keyboard appearance on mobile)
+  useEffect(() => {
+    function handleResize() {
+      if (chatListRef.current) {
+        chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+      }
+    }
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Handle image upload (exactly 3 images)
   const handleImageUpload = async (files) => {
@@ -143,6 +161,14 @@ export default function BeautySkinAI({ userProfile }) {
     handleImageUpload(files);
   };
 
+  // Handle keyboard press enter to send message
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      handleSend();
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className="app-container">
       {/* App Header */}
@@ -188,26 +214,20 @@ export default function BeautySkinAI({ userProfile }) {
               >
                 {/* AI message avatar */}
                 {msg.type === 'ai' && (
-                  // You can use either a simple span replacement...
-                  // <div className="avatar ai-avatar"></div>
-                  
-                  // ...or with an image URL:
                   <div 
                     className="avatar ai-avatar"
                     style={{ backgroundImage: `url('https://x.com/divyansh_ai/photo')` }}
                   >
-                    {/* there should be avatar for ai */}
                     <span></span>
                   </div>
                 )}
 
                 {/* User message avatar */}
                 {msg.type === 'user' && (
-                  // If you have a userProfile.avatarUrl you can use it:
                   <div 
                     className="avatar user-avatar"
                     style={{ backgroundImage: `url('${userProfile && userProfile.avatarUrl ? userProfile.avatarUrl : '/logo.png'}')` }}
-                  >{/* there should be avatar for user below */}
+                  >
                     <span></span>
                   </div>
                 )}
@@ -223,6 +243,8 @@ export default function BeautySkinAI({ userProfile }) {
                 </div>
               </div>
             ))}
+            {/* Spacer div to ensure content doesn't get hidden behind input area */}
+            <div className="message-spacer"></div>
           </div>
         )}
       </main>
@@ -234,7 +256,7 @@ export default function BeautySkinAI({ userProfile }) {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyDown={handleKeyPress}
             placeholder="Ask about your skin..."
             disabled={loading}
           />

@@ -32,6 +32,8 @@ body {
   background-color: white;
   box-shadow: 0 2px 15px rgba(255, 105, 180, 0.15);
   z-index: 10;
+  position: sticky;
+  top: 0;
 }
 
 .logo-container {
@@ -74,8 +76,9 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
+  /* This is the key change to ensure last message is visible */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px));
   scroll-behavior: smooth;
-  position: relative;
 }
 
 .chat-window::-webkit-scrollbar {
@@ -324,14 +327,39 @@ body {
   }
 }
 
-/* Update the input area to be centered as well */
-.input-area {
-  padding: 15px 20px;
-  background-color: white;
-  box-shadow: 0 -2px 15px rgba(255, 105, 180, 0.1);
+/* Ensure the whole container fills the viewport */
+.chat-container {
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Increased padding to accommodate input area height plus some extra space */
+  padding-bottom: 100px; 
 }
 
+/* Chat messages container should fill the space above the input area */
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  /* Add padding to ensure last message is fully visible above input area */
+  padding-bottom: 80px; 
+}
+
+/* Update the input area to be fixed at the bottom with safe area support */
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 20px;
+  /* Safe area inset for devices with notches/home bars */
+  padding-bottom: calc(15px + env(safe-area-inset-bottom, 15px));
+  background-color: white;
+  box-shadow: 0 -2px 15px rgba(255, 105, 180, 0.1);
+  z-index: 100;
+}
+
+/* Style the input container as before */
 .input-container {
   display: flex;
   align-items: center;
@@ -361,7 +389,10 @@ body {
 .input-container input::placeholder {
   color: #AAA;
 }
-
+/* Ensure the message container animations don't interfere with spacing */
+.message-container:last-child {
+  margin-bottom: 10px;
+}
 .upload-button, .send-button {
   width: 38px;
   height: 38px;
