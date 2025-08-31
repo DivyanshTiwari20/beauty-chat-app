@@ -4,7 +4,6 @@ const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const axios = require('axios'); // for fetching images
-const auth = require('../middleware/auth');
 const User = require('../models/User');
 
 // Configure Cloudinary
@@ -32,7 +31,7 @@ async function fetchImageAsBase64(url) {
 }
 
 // Protected Image Upload Route
-router.post('/upload', auth, upload.array('images', 3), async (req, res) => {
+router.post('/upload', upload.array('images', 3), async (req, res) => {
   try {
     if (!req.files || req.files.length < 3) {
       return res.status(400).json({ error: 'Please upload exactly 3 images' });
@@ -46,8 +45,7 @@ router.post('/upload', auth, upload.array('images', 3), async (req, res) => {
       imageUrls.push(result.secure_url);
     }
 
-    // Save image URLs to user document
-    await User.findByIdAndUpdate(req.user.id, { $set: { images: imageUrls } });
+    
 
     res.status(200).json({ success: true, imageUrls });
   } catch (err) {
@@ -57,12 +55,11 @@ router.post('/upload', auth, upload.array('images', 3), async (req, res) => {
 });
 
 // Protected Analysis Route
-router.post('/analyze', auth, async (req, res) => {
+router.post('/analyze', async (req, res) => {
   try {
-    const { question } = req.body;
-    const user = await User.findById(req.user.id);
+    const { question, imageUrls } = req.body;
     
-    if (!user.images || user.images.length < 3) {
+    if (!imageUrls || imageUrls.length < 3) {
       return res.status(400).json({ error: 'Please upload 3 images first' });
     }
 
@@ -87,7 +84,7 @@ User question: ${question}
     `;
 
     // Convert each image URL to base64 data
-    const imageParts = await Promise.all(user.images.map(async (url) => {
+    const imageParts = await Promise.all(imageUrls.map(async (url) => {
       const base64Data = await fetchImageAsBase64(url);
       return {
         inlineData: { 

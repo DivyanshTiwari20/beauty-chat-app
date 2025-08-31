@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -26,17 +26,13 @@ app.use(cors({
   credentials: true,
 }));
 
-// Database connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+
 
 // Routes
 app.get('/', (req, res) => {
   res.send('Backend is on fucking fire !! Not literally.. lol');
 });
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/user', require('./routes/user'));
+
 app.use('/api/analysis', require('./routes/analysis'));
 
 // Start the server (make sure to call this only once)
