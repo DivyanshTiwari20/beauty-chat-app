@@ -175,7 +175,7 @@ export default function BeautySkinAI({ userProfile }) {
       <header className="app-header">
         <div className="logo-container">
           <div className="logo-icon"></div>
-          <h1>kaya-BeautySkinAI</h1>
+          <h1>Manno : Your beauty Advisor</h1>
         </div>
       </header>
 
@@ -184,8 +184,8 @@ export default function BeautySkinAI({ userProfile }) {
         {chatHistory.length === 0 ? (
           <div className="welcome-screen">
             <div className="welcome-bubble"></div>
-            <h2>Welcome to BeautySkinAI</h2>
-            <p>Your personal Ayurvedic skin advisor powered by AI</p>
+            <h2>Hi I'm Maano</h2>
+            <p>Your personal skin advisor powered by Askus</p>
             <div className="welcome-cards">
               <div className="welcome-card">
                 <div className="card-icon upload-icon"></div>

@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Backend is on fire !! Not literally.. lol');
+  res.send('Backend is on fucking fire !! Not literally.. lol');
 });
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
