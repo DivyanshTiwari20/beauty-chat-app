@@ -23,7 +23,7 @@ function TypingIndicator() {
   );
 }
 
-export default function BeautySkinAI({ userProfile }) {
+export default function BeautySkinAI() {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState(() => {
     const saved = localStorage.getItem('chatHistory');
@@ -60,15 +60,6 @@ export default function BeautySkinAI({ userProfile }) {
 
   // Handle image upload (exactly 3 images)
   const handleImageUpload = async (files) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setChatHistory(prev => [
-        ...prev,
-        { type: 'system', content: 'Please login first to upload images.' }
-      ]);
-      return;
-    }
-    
     if (!files || files.length !== 3) {
       setChatHistory(prev => [
         ...prev, 
@@ -87,7 +78,6 @@ export default function BeautySkinAI({ userProfile }) {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/analysis/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
         },
       });
       setChatHistory((prev) => [
@@ -126,11 +116,9 @@ export default function BeautySkinAI({ userProfile }) {
     ]);
     
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/analysis/analyze`,
-        { question: userQuery },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { question: userQuery }
       );
       
       // Replace loading message with actual response
@@ -159,7 +147,7 @@ export default function BeautySkinAI({ userProfile }) {
   const handleFileChange = (e) => {
     const files = e.target.files;
     handleImageUpload(files);
-  };
+};
 
   // Handle keyboard press enter to send message
   const handleKeyPress = (e) => {
@@ -226,7 +214,7 @@ export default function BeautySkinAI({ userProfile }) {
                 {msg.type === 'user' && (
                   <div 
                     className="avatar user-avatar"
-                    style={{ backgroundImage: `url('${userProfile && userProfile.avatarUrl ? userProfile.avatarUrl : '/logo.png'}')` }}
+                    style={{ backgroundImage: `url('/logo.png')` }}
                   >
                     <span></span>
                   </div>
