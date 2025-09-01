@@ -63,7 +63,7 @@ export default function BeautySkinAI() {
     if (!files || files.length !== 3) {
       setChatHistory(prev => [
         ...prev, 
-        { type: 'system', content: 'Please select exactly 3 images of your skin for the best analysis.' }
+        { type: 'system', content: 'Optional: Please select exactly 3 images if you want image-based analysis. You can chat without uploading!' }
       ]);
       return;
     }
@@ -86,9 +86,12 @@ export default function BeautySkinAI() {
       ]);
     } catch (err) {
       console.error('Upload Error:', err);
+      const errorMsg = err.response?.status === 401 
+        ? 'Server requires authentication—contact support if this persists (no login needed here).' 
+        : err.response?.data?.error || 'Image upload failed. Please try again.';
       setChatHistory(prev => [
         ...prev,
-        { type: 'system', content: err.response?.data?.error || 'Image upload failed. Please try again.' }
+        { type: 'system', content: errorMsg }
       ]);
     } finally {
       setLoading(false);
@@ -129,12 +132,15 @@ export default function BeautySkinAI() {
       });
     } catch (error) {
       console.error('Error:', error);
+      const errorMsg = error.response?.status === 401 
+        ? 'Server requires authentication—contact support if this persists (no login needed here).' 
+        : error.response?.data?.error || 'Analysis failed. Please try again.';
       // Replace loading message with error
       setChatHistory(prev => {
         const newHistory = [...prev];
         newHistory[newHistory.length - 1] = { 
           type: 'system', 
-          content: error.response?.data?.error || 'Analysis failed. Please try again.' 
+          content: errorMsg 
         };
         return newHistory;
       });
@@ -147,7 +153,7 @@ export default function BeautySkinAI() {
   const handleFileChange = (e) => {
     const files = e.target.files;
     handleImageUpload(files);
-};
+  };
 
   // Handle keyboard press enter to send message
   const handleKeyPress = (e) => {
@@ -173,12 +179,12 @@ export default function BeautySkinAI() {
           <div className="welcome-screen">
             <div className="welcome-bubble"></div>
             <h2>Hi I'm Maano</h2>
-            <p>Your personal skin advisor powered by Askus</p>
+            <p>Your personal skin advisor powered by Askus—no login or images required! Upload 3 photos for personalized analysis (optional).</p>
             <div className="welcome-cards">
               <div className="welcome-card">
                 <div className="card-icon upload-icon"></div>
-                <h3>Upload Photos</h3>
-                <p>Share 3 photos of your skin for analysis</p>
+                <h3>Upload Photos (Optional)</h3>
+                <p>Share 3 photos of your skin for detailed analysis</p>
               </div>
               <div className="welcome-card">
                 <div className="card-icon analyze-icon"></div>
