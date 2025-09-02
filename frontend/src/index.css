@@ -1,503 +1,403 @@
-/* Global Reset and Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* src/index.css */
+
+/* 1. Global Styles & Variables ================================= */
+:root {
+  /* --- UPDATED: Pink theme variables --- */
+  --primary-bg: #FFF5F7; /* Very light pink page background */
+  --header-bg: #ffffff;
+  --input-bg: #ffffff;
+  --user-bubble-bg: #E5367A; /* A strong, beautiful pink for user messages */
+  --user-bubble-text: #ffffff;
+  --ai-bubble-bg: #FDE7F0; /* Soft pink for AI messages */
+  --ai-bubble-text: #41222F;
+  --system-bubble-bg: #fff3cd; /* Kept yellow for noticeability, but it fits */
+  --system-bubble-text: #664d03;
+  --welcome-card-bg: #ffffff;
+  --text-primary: #331A24;
+  --text-secondary: #8C6A7A;
+  --border-color: #F7D0E0; /* Soft pink border */
+  --accent-color: #E5367A; /* Main theme accent color */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background: rgba(255, 255, 255, 0.8);
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--primary-bg); /* Use the new light pink background */
+  color: var(--text-primary);
 }
 
-/* Main App Container - Full Screen */
+* {
+  box-sizing: border-box;
+}
+
+/* --- NEW: Page wrapper to center the app container --- */
+#root { /* Assuming your React app mounts to the 'root' div */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+
+/* 2. Main App Layout ========================================= */
 .app-container {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
+  /* --- UPDATED: For centered 6xl layout --- */
+  width: 100%;
+  max-width: 1152px; /* This is the equivalent of 6xl (72rem) */
+  height: 95vh; /* Take up most of the viewport height */
+  max-height: 900px; /* Cap the height on very tall screens */
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(184, 85, 126, 0.15);
+  position: relative; /* Ensure children are contained */
+
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  max-width: 1200px; /* Maximum width for large screens */
-  margin: 0 auto; /* Center the container horizontally */
+  overflow: hidden; /* Important for keeping rounded corners */
+  background-color: #FDFBFC; /* A slightly off-white for the chat area */
 }
 
-/* Header Styles */
 .app-header {
-  padding: 12px 20px;
-  background-color: white;
-  box-shadow: 0 2px 15px rgba(255, 105, 180, 0.15);
-  z-index: 10;
-  position: sticky;
-  top: 0;
+  padding: 1rem 1.5rem;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.75rem;
 }
 
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF69B4, #FFB6C1);
-  margin-right: 10px;
-  position: relative;
-}
-
-.logo-icon::after {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #FF69B4, transparent);
-  border-radius: 50%;
-  z-index: -1;
-  filter: blur(2px);
-}
-
-.app-header h1 {
-  font-size: 1.4rem;
+.logo-container h1 {
+  margin: 0;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #FF69B4;
-  text-align: center;
 }
 
-/* Chat Window */
 .chat-window {
-  flex: 1;
+  flex-grow: 1;
   overflow-y: auto;
-  padding: 20px;
-  /* This is the key change to ensure last message is visible */
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px));
-  scroll-behavior: smooth;
-}
-
-.chat-window::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-window::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 105, 180, 0.3);
-  border-radius: 3px;
-}
-
-.chat-window::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-/* Welcome Screen */
-.welcome-screen {
-  height: 100%;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+}
+
+/* 3. Welcome Screen ========================================== */
+.welcome-screen {
   text-align: center;
-  padding: 0 20px;
-}
-
-.welcome-bubble {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF69B4, #FFB6C1);
-  margin-bottom: 25px;
-  position: relative;
-  animation: pulse 3s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 20px rgba(255, 105, 180, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
-  }
+  margin: auto;
+  padding: 1rem;
 }
 
 .welcome-screen h2 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .welcome-screen p {
-  font-size: 1rem;
-  color: #666;
-  max-width: 400px;
-  margin-bottom: 30px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
 }
 
 .welcome-cards {
   display: flex;
-  gap: 20px;
   justify-content: center;
+  gap: 1.5rem;
   flex-wrap: wrap;
-  max-width: 900px;
 }
 
 .welcome-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  flex: 1;
-  min-width: 200px;
-  max-width: 240px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.welcome-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
-}
-
-.card-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin: 0 auto 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFF0F5;
+  background: var(--welcome-card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(184, 85, 126, 0.05);
+  width: 220px;
+  text-align: center;
 }
 
 .welcome-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #FF69B4;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
 .welcome-card p {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
 }
 
-/* Chat Messages */
+/* 4. Chat Messages ============================================ */
 .chat-messages {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 900px; /* Maximum width for chat content */
-  margin: 0 auto; /* Center the chat content */
-  width: 100%;
+  gap: 1rem;
 }
 
 .message-container {
   display: flex;
+  max-width: 80%;
   align-items: flex-end;
-  gap: 10px;
-  animation: fadeIn 0.3s ease-in-out forwards;
+  gap: 0.75rem;
   opacity: 0;
-  transform: translateY(20px);
+  animation: fadeIn 0.4s forwards;
 }
 
 @keyframes fadeIn {
   to {
     opacity: 1;
-    transform: translateY(0);
   }
+}
+
+.message-spacer {
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .user-container {
-  justify-content: flex-end;
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.message.user {
+  background-color: var(--user-bubble-bg);
+  color: var(--user-bubble-text);
+  border-radius: 18px 18px 4px 18px;
 }
 
-.ai-container, .system-container {
-  justify-content: flex-start;
+.ai-container {
+  align-self: flex-start;
+}
+.message.ai {
+  background-color: var(--ai-bubble-bg);
+  color: var(--ai-bubble-text);
+  border-radius: 18px 18px 18px 4px;
+}
+
+.system-container {
+  align-self: center;
+  max-width: 90%;
+  font-size: 0.875rem;
+}
+.message.system {
+  background-color: var(--system-bubble-bg);
+  color: var(--system-bubble-text);
+  border: 1px solid #ffe69c;
+  border-radius: 8px;
+  text-align: center;
 }
 
 .message {
-  border-radius: 18px;
-  padding: 12px 16px;
-  max-width: 80%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.user {
-  background-color: #FF69B4;
-  color: white;
-  border-bottom-right-radius: 4px;
-}
-
-.ai {
-  background-color: white;
-  color: #333;
-  border-bottom-left-radius: 4px;
-}
-
-.system {
-  background-color: #FFF0F5;
-  color: #696eff;
-  font-style: italic;
-  font-size: 0.9rem;
-  align-self: center;
-  border-radius: 12px;
-}
-
-.markdown-content {
+  padding: 0.75rem 1rem;
   line-height: 1.5;
 }
 
-.markdown-content ul, 
-.markdown-content ol {
-  margin-left: 20px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+.message p {
+  margin: 0;
 }
 
-.markdown-content p {
-  margin-bottom: 8px;
-}
-
-.markdown-content strong {
-  font-weight: 600;
-}
-
-/* Avatar styles */
-* Update avatar styles to use images instead of text */
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  border: 2px solid var(--header-bg);
 }
 
-.user-avatar {
-  background-color: #FFD6E7;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF69B4'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'%3E%3C/path%3E%3C/svg%3E");
+/* 5. Markdown & Typing Indicator ============================== */
+.markdown-content {
+  font-size: 1rem;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+.markdown-content ul, .markdown-content ol {
+  padding-left: 1.5rem;
+}
+.markdown-content li {
+  margin-bottom: 0.5rem;
 }
 
-.ai-avatar {
-  background-color: #FFF0F5;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF69B4'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-4.41 3.59-8 8-8s8 3.59 8 8c0 4.41-3.59 8-8 8zm-1-14h2v6h-2zm0 8h2v2h-2z'%3E%3C/path%3E%3C/svg%3E");
-}
-/* Typing indicator */
 .typing-indicator {
   display: flex;
-  gap: 5px;
-  padding: 8px 0;
+  align-items: center;
+  padding: 0.75rem 1rem;
 }
-
 .typing-indicator span {
-  width: 8px;
   height: 8px;
-  background-color: #FF69B4;
+  width: 8px;
+  background-color: #c9a9b9;
   border-radius: 50%;
-  display: inline-block;
-  opacity: 0.6;
+  margin: 0 2px;
+  animation: bounce 1.4s infinite ease-in-out both;
 }
-
-.typing-indicator span:nth-child(1) {
-  animation: bounce 1s infinite 0.2s;
-}
-.typing-indicator span:nth-child(2) {
-  animation: bounce 1s infinite 0.4s;
-}
-.typing-indicator span:nth-child(3) {
-  animation: bounce 1s infinite 0.6s;
-}
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 
 @keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
 }
 
-/* Ensure the whole container fills the viewport */
-.chat-container {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  /* Increased padding to accommodate input area height plus some extra space */
-  padding-bottom: 100px; 
-}
-
-/* Chat messages container should fill the space above the input area */
-.messages-container {
-  flex: 1;
-  overflow-y: auto;
-  /* Add padding to ensure last message is fully visible above input area */
-  padding-bottom: 80px; 
-}
-
-/* Update the input area to be fixed at the bottom with safe area support */
+/* 6. Input Area =============================================== */
 .input-area {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 15px 20px;
-  /* Safe area inset for devices with notches/home bars */
-  padding-bottom: calc(15px + env(safe-area-inset-bottom, 15px));
-  background-color: white;
-  box-shadow: 0 -2px 15px rgba(255, 105, 180, 0.1);
-  z-index: 100;
+  padding: 1rem 1.5rem;
+  background-color: var(--input-bg);
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
-/* Style the input container as before */
 .input-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: #F9F9F9;
-  border-radius: 24px;
-  padding: 5px 5px 5px 16px;
-  border: 1px solid #F0F0F0;
-  transition: border 0.3s ease;
-  max-width: 900px;
-  margin: 0 auto;
+  gap: 0.75rem;
 }
 
-.input-container:focus-within {
-  border: 1px solid #FF69B4;
-}
-
-.input-container input {
-  flex: 1;
-  border: none;
+.input-container input[type="text"] {
+  flex-grow: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   outline: none;
-  font-size: 0.95rem;
-  background: transparent;
-  padding: 8px 0;
+  transition: border-color 0.2s;
+}
+.input-container input[type="text"]:focus {
+  border-color: var(--accent-color);
+}
+.input-container input[type="text"]:disabled {
+  background-color: #f8f9fa;
 }
 
-.input-container input::placeholder {
-  color: #AAA;
-}
-/* Ensure the message container animations don't interfere with spacing */
-.message-container:last-child {
-  margin-bottom: 10px;
-}
-.upload-button, .send-button {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.upload-button {
-  background-color: #FFF0F5;
-}
-
-.upload-button:hover {
-  background-color: #FFD6E7;
-}
-
-.upload-button input {
+.upload-button input[type="file"] {
   display: none;
 }
 
-.camera-icon, .send-icon {
-  width: 20px;
-  height: 20px;
-  fill: #FF69B4;
+.upload-button, .send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.upload-button:hover, .send-button:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.upload-button svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-color);
+}
+.send-button svg {
+  fill: #fff;
 }
 
 .send-button {
-  background-color: #FF69B4;
+  background-color: var(--accent-color);
 }
-
-.send-button:hover {
-  background-color: #FF4FAA;
-  transform: scale(1.05);
-}
-
-.send-button .send-icon {
-  fill: white;
-}
-
 .send-button:disabled {
-  background-color: #FFD6E7;
+  background-color: #F8B4D3; /* Lighter pink when disabled */
   cursor: not-allowed;
 }
 
-.send-button:disabled .send-icon {
-  fill: #FFB6C1;
-}
-
-/* Progress bar */
 .progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
+  height: 4px;
   width: 100%;
-  height: 3px;
+  background-color: #FDE7F0;
+  margin-top: 0.75rem;
+  border-radius: 2px;
   overflow: hidden;
 }
-
 .progress-value {
-  width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, #FF69B4, #FFB6C1, #FF69B4);
-  background-size: 200% 100%;
-  animation: loading 2s linear infinite;
+  width: 100%;
+  background: linear-gradient(90deg, #FAD1E3, var(--accent-color));
+  background-size: 200% 200%;
+  animation: progressAnimation 2s linear infinite;
 }
 
-@keyframes loading {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+@keyframes progressAnimation {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Media queries for responsive design */
+/* 7. Responsive Media Queries ================================ */
+
 @media (max-width: 768px) {
+  #root {
+    padding: 0; /* Remove padding for edge-to-edge on mobile */
+  }
+  .app-container {
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+  .app-header {
+    padding: 0.75rem 1rem;
+  }
+  .logo-container h1 {
+    font-size: 1.1rem;
+  }
+  .chat-window {
+    padding: 1rem;
+  }
   .welcome-cards {
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
   }
-  
   .welcome-card {
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
   }
-  
-  .message {
+  .message-container {
     max-width: 85%;
+  }
+  .input-area {
+    padding: 0.75rem 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .app-header h1 {
-    font-size: 1.2rem;
+  .logo-container h1 {
+    font-size: 1rem;
   }
-  
-  .welcome-screen h2 {
-    font-size: 1.5rem;
-  }
-  
-  .message {
+  .message-container {
     max-width: 90%;
+    gap: 0.5rem;
+  }
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .message {
+    padding: 0.6rem 0.9rem;
+  }
+  .input-container input[type="text"] {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  .upload-button, .send-button {
+    width: 40px;
+    height: 40px;
   }
 }

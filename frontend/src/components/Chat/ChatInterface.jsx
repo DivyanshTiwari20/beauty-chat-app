@@ -168,8 +168,8 @@ export default function BeautySkinAI() {
       {/* App Header */}
       <header className="app-header">
         <div className="logo-container">
-          <div className="logo-icon"></div>
-          <h1>Manno : Your beauty Advisor</h1>
+          <div className="logo-icon "></div>
+          {/* <h1>Manno : Your beauty Advisor</h1> */}
         </div>
       </header>
 
@@ -179,11 +179,11 @@ export default function BeautySkinAI() {
           <div className="welcome-screen">
             <div className="welcome-bubble"></div>
             <h2>Hi I'm Maano</h2>
-            <p>Your personal skin advisor powered by Askus—no login or images required! Upload 3 photos for personalized analysis (optional).</p>
+            <p>Your personal skin advisor powered by Askus— Upload 3 photos for personalized analysis (optional).</p>
             <div className="welcome-cards">
               <div className="welcome-card">
                 <div className="card-icon upload-icon"></div>
-                <h3>Upload Photos (Optional)</h3>
+                <h3>Upload Photos</h3>
                 <p>Share 3 photos of your skin for detailed analysis</p>
               </div>
               <div className="welcome-card">
@@ -251,7 +251,8 @@ export default function BeautySkinAI() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Ask about your skin..."
+            placeholder="Talk to Manno😊..."
+            // placeholder="Ask about your skin..."
             disabled={loading}
           />
           
