@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import '../../../src/index.css'; // We'll create this file below
+import '../../../src/index.css'; // Custom styles
 
 // Component to render Markdown text
 function AnalysisOutput({ markdownText }) {
@@ -163,130 +163,151 @@ export default function BeautySkinAI() {
     }
   };
 
+  // Handle back button (goes back in browser history)
+
   return (
-    <div className="app-container">
-      {/* App Header */}
-      <header className="app-header">
-        <div className="logo-container">
-          <div className="logo-icon "></div>
-          {/* <h1>Manno : Your beauty Advisor</h1> */}
-        </div>
-      </header>
+    <>
+      <div className="app-container">
+        
+        {/* App Header with buttons */}
+        <header className="app-header">
+  <button 
+    onClick={() => window.location.href = "https://glamflow.in"}
+    className="back-button"
+  >
+    Back
+  </button>
+  
+  <div className="logo-container">
+    <div className="logo-icon"></div>
+    {/* <h1>Manno : Your beauty Advisor</h1> */}
+  </div>
+  
+  <a 
+    href="https://glamflow.in/auth"
+    target="_self"
+    className="app-button"
+  >
+    Go to App
+  </a>
+</header>
 
-      {/* Chat Window */}
-      <main className="chat-window" ref={chatListRef}>
-        {chatHistory.length === 0 ? (
-          <div className="welcome-screen">
-            <div className="welcome-bubble"></div>
-            <h2>Hi I'm Maano</h2>
-            <p>Your personal skin advisor powered by Askus— Upload 3 photos for personalized analysis (optional).</p>
-            <div className="welcome-cards">
-              <div className="welcome-card">
-                <div className="card-icon upload-icon"></div>
-                <h3>Upload Photos</h3>
-                <p>Share 3 photos of your skin for detailed analysis</p>
-              </div>
-              <div className="welcome-card">
-                <div className="card-icon analyze-icon"></div>
-                <h3>Get Analysis</h3>
-                <p>Receive personalized Ayurvedic skin guidance</p>
-              </div>
-              <div className="welcome-card">
-                <div className="card-icon routine-icon"></div>
-                <h3>Daily Routine</h3>
-                <p>Follow your customized skincare regimen</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="chat-messages">
-            {chatHistory.map((msg, index) => (
-              <div 
-                key={index} 
-                className={`message-container ${msg.type}-container`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* AI message avatar */}
-                {msg.type === 'ai' && (
-                  <div 
-                    className="avatar ai-avatar"
-                    style={{ backgroundImage: `url('https://x.com/divyansh_ai/photo')` }}
-                  >
-                    <span></span>
-                  </div>
-                )}
 
-                {/* User message avatar */}
-                {msg.type === 'user' && (
-                  <div 
-                    className="avatar user-avatar"
-                    style={{ backgroundImage: `url('/logo.png')` }}
-                  >
-                    <span></span>
-                  </div>
-                )}
-
-                <div className={`message ${msg.type}`}>
-                  {msg.type === 'ai-loading' ? (
-                    <TypingIndicator />
-                  ) : msg.type === 'ai' ? (
-                    <AnalysisOutput markdownText={msg.content} />
-                  ) : (
-                    <p>{msg.content}</p>
-                  )}
+        {/* Chat Window */}
+        <main className="chat-window" ref={chatListRef}>
+          {chatHistory.length === 0 ? (
+            <div className="welcome-screen">
+              <div className="welcome-bubble"></div>
+              <h2>Hi I'm Maano</h2>
+              <p>Your personal skin advisor powered by Askus— Upload 3 photos for personalized analysis (optional).</p>
+              <div className="welcome-cards">
+                <div className="welcome-card">
+                  <div className="card-icon upload-icon"></div>
+                  <h3>Upload Photos</h3>
+                  <p>Share 3 photos of your skin for detailed analysis</p>
+                </div>
+                <div className="welcome-card">
+                  <div className="card-icon analyze-icon"></div>
+                  <h3>Get Analysis</h3>
+                  <p>Receive personalized Ayurvedic skin guidance</p>
+                </div>
+                <div className="welcome-card">
+                  <div className="card-icon routine-icon"></div>
+                  <h3>Daily Routine</h3>
+                  <p>Follow your customized skincare regimen</p>
                 </div>
               </div>
-            ))}
-            {/* Spacer div to ensure content doesn't get hidden behind input area */}
-            <div className="message-spacer"></div>
-          </div>
-        )}
-      </main>
+            </div>
+          ) : (
+            <div className="chat-messages">
+              {chatHistory.map((msg, index) => (
+                <div 
+                  key={index} 
+                  className={`message-container ${msg.type}-container`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  {/* AI message avatar */}
+                  {msg.type === 'ai' && (
+                    <div 
+                      className="avatar ai-avatar"
+                      style={{ backgroundImage: `url('https://x.com/divyansh_ai/photo')` }}
+                    >
+                      <span></span>
+                    </div>
+                  )}
 
-      {/* Input Area */}
-      <footer className="input-area">
-        <div className="input-container">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Talk to Manno😊..."
-            // placeholder="Ask about your skin..."
-            disabled={loading}
-          />
-          
-          <label className="upload-button">
+                  {/* User message avatar */}
+                  {msg.type === 'user' && (
+                    <div 
+                      className="avatar user-avatar"
+                      style={{ backgroundImage: `url('/logo.png')` }}
+                    >
+                      <span></span>
+                    </div>
+                  )}
+
+                  <div className={`message ${msg.type}`}>
+                    {msg.type === 'ai-loading' ? (
+                      <TypingIndicator />
+                    ) : msg.type === 'ai' ? (
+                      <AnalysisOutput markdownText={msg.content} />
+                    ) : (
+                      <p>{msg.content}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {/* Spacer div to ensure content doesn't get hidden behind input area */}
+              <div className="message-spacer"></div>
+            </div>
+          )}
+        </main>
+
+        {/* Input Area */}
+        <footer className="input-area">
+          <div className="input-container">
             <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleFileChange}
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="Talk to Manno😊..."
+              // placeholder="Ask about your skin..."
               disabled={loading}
             />
-            <svg viewBox="0 0 24 24" className="camera-icon">
-              <path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"></path>
-              <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path>
-            </svg>
-          </label>
-          
-          <button 
-            className="send-button" 
-            onClick={handleSend}
-            disabled={!message.trim() || loading}
-          >
-            <svg viewBox="0 0 24 24" className="send-icon">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-            </svg>
-          </button>
-        </div>
-        
-        {loading && (
-          <div className="progress-bar">
-            <div className="progress-value"></div>
+            
+            <label className="upload-button">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={loading}
+              />
+              <svg viewBox="0 0 24 24" className="camera-icon">
+                <path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"></path>
+                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path>
+              </svg>
+            </label>
+            
+            <button 
+              className="send-button" 
+              onClick={handleSend}
+              disabled={!message.trim() || loading}
+            >
+              <svg viewBox="0 0 24 24" className="send-icon">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+              </svg>
+            </button>
           </div>
-        )}
-      </footer>
-    </div>
+          
+          {loading && (
+            <div className="progress-bar">
+              <div className="progress-value"></div>
+            </div>
+          )}
+        </footer>
+      </div>
+    </>
   );
 }

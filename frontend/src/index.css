@@ -63,10 +63,34 @@ body {
 }
 
 .app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+}
+
+/* Button styles for back and app navigation */
+.back-button,
+.app-button {
+  background-color: var(--header-bg);
+  color: var(--accent-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none; /* For the link button */
+}
+
+.back-button:hover,
+.app-button:hover {
+  background-color: var(--ai-bubble-bg); /* Soft pink hover */
+  transform: scale(1.05);
 }
 
 .logo-container {
@@ -400,4 +424,5 @@ body {
     width: 40px;
     height: 40px;
   }
-}
+  
+} 
